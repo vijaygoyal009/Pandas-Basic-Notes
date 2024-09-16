@@ -1,0 +1,938 @@
+What is Pandas ?
+-------------------
+Pandas ek popular Python library hai jo data ko handle aur analyze karne ke liye use hoti hai. Iska main kaam hai structured data ko easily manipulate karna, jaise tabular data (rows aur columns) ko efficiently manage karna. Pandas mein do primary data structures hote hain: Series (ek-dimensional) aur DataFrame (do-dimensional, jo spreadsheet ki tarah hota hai). Iska use data ko filter karne, clean karne, sort karne aur analyze karne mein hota hai, jaise Excel ki tarah but with more advanced capabilities.
+
+
+
+
+What Can Pandas Do ?
+----------------------
+Pandas kai powerful features provide karta hai jo data analysis aur manipulation ko easy banate hain. Kuch main kaam jo Pandas kar sakta hai:
+
+1. Data Loading and Saving :- CSV, Excel, SQL databases, aur dusre formats se data load aur save kar sakta hai.
+ ---------------------------
+
+2. Data Cleaning :- Missing values ko handle karna, duplicates remove karna, aur data ko clean karna.
+------------------
+
+3. Data Transformation: Data ko filter, sort, merge, aur group kar sakta hai (jaise SQL queries karte hain).
+ ----------------------
+
+4. Data Analysis: Statistical operations jaise mean, sum, count, etc. karna.
+ ----------------
+
+5. Data Visualization: Pandas ko Matplotlib ke sath use karke graphs aur plots create kar sakte hain.
+ ----------------------
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+What is a Series?
+----------------
+
+Series Pandas ka ek one-dimensional data structure hota hai, jo ek list ki tarah hota hai, but usme indexing bhi hoti hai. Har value ke saath ek index attached hota hai, jo us value ka unique identifier hota hai. Series ko samajhne ke liye, aap ise ek column ki tarah soch sakte ho, jaise Excel ya DataFrame ke ek column mein data hota hai.
+
+
+Example :-
+---------
+(1)
+import pandas as pd
+
+a = [1, 7, 2]
+
+myvar = pd.Series(a)
+
+print(myvar)
+
+
+(2) 
+import pandas as pd
+
+a = [1, 7, 2]
+
+myvar = pd.Series(a, index = ["x", "y", "z"])
+
+print(myvar)
+
+
+(3)
+import pandas as pd
+
+calories = {"day1": 420, "day2": 380, "day3": 390}
+
+myvar = pd.Series(calories)
+
+print(myvar)
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+What is a DataFrame?
+---------------------
+
+DataFrame Pandas ka ek two-dimensional data structure hota hai, jo Excel sheet ya SQL table ki tarah rows aur columns mein data store karta hai. Isme har column ek Series hota hai, aur DataFrame multiple Series ka collection hota hai.
+
+DataFrame mein rows aur columns dono ko index kiya ja sakta hai, jo data ko manipulate karne aur analyze karne ko easy banata hai.
+
+
+Example :-
+---------
+import pandas as pd
+data = {'Name': ['Amit', 'Priya', 'Rahul'],
+        'Age': [25, 30, 22],
+        'City': ['Delhi', 'Mumbai', 'Pune']}
+df = pd.DataFrame(data)
+print(df)
+
+
+Example :-
+---------
+
+import pandas as pd
+data = {
+  "calories": [420, 380, 390],
+  "duration": [50, 40, 45]
+}
+
+df = pd.DataFrame(data, index = ["day1", "day2", "day3"])
+
+print(df) 
+
+
+
+
+
+Locate Row
+-----------
+
+Locate row ka matlab hota hai kisi specific row ko find karna ya access karna DataFrame ke andar. Pandas mein hum loc[] ya iloc[] functions ka use karke rows ko locate kar sakte hain.
+
+loc[]: Iska use hum label-based indexing ke liye karte hain, jisme row aur column ke labels (names) ka use hota hai.
+iloc[]: Iska use integer-based indexing ke liye hota hai, jisme row aur column numbers ka use hota hai (0-based index).
+
+
+
+Example :-
+---------
+import pandas as pd
+data = {'Name': ['Amit', 'Priya', 'Rahul'],
+        'Age': [25, 30, 22]}
+df = pd.DataFrame(data)
+print(df.loc[1])  # Row with label/index 1
+
+
+
+
+Example :- (iska use karke ham 1 se jyada ko access kar sakte he)
+---------
+#use a list of indexes:
+print(df.loc[[0, 1]])
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+                                        Read CSV Files
+                                        --------------
+
+CSV files (Comma Separated Values) ek common file format hai jo data ko tabular form mein store karta hai, jaise rows aur columns. Ye files kaafi simple hoti hain aur widely supported hoti hain, especially for importing/exporting data between applications like Excel, Google Sheets, ya databases.
+
+
+Example -
+--------
+Load the CSV into a DataFrame:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+print(df.to_string()) 
+
+
+                        --------------------------------------------------
+                        Tip: use to_string() to print the entire DataFrame.
+                        --------------------------------------------------
+
+
+
+If you have a large DataFrame with many rows, Pandas will only return the first 5 rows, and the last 5 rows:
+
+
+Example -
+--------
+import pandas as pd
+df = pd.read_csv('data.csv')
+print(df) 
+
+
+
+
+                                max_rows
+                             -------------
+
+The number of rows returned is defined in Pandas option settings.
+
+You can check your system's maximum rows with the pd.options.display.max_rows statement.
+
+
+
+Example -
+--------
+Check the number of maximum returned rows:
+
+
+import pandas as pd
+print(pd.options.display.max_rows) 
+
+
+
+
+In my system the number is 60, which means that if the DataFrame contains more than 60 rows, the print(df) statement will return only the headers and the first and last 5 rows.
+
+You can change the maximum rows number with the same statement.
+
+
+
+Example -
+---------
+Increase the maximum number of rows to display the entire DataFrame:
+
+
+import pandas as pd
+pd.options.display.max_rows = 9999
+df = pd.read_csv('data.csv')
+print(df) 
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+                                                Pandas Read JSON
+                                                -----------------
+
+Read JSON
+-----------
+
+JSON (JavaScript Object Notation) ek lightweight data-interchange format hai jo human-readable text ko use karta hai. Ye format web applications mein data ko transfer karne ke liye kaafi commonly use hota hai, jaise API responses ko handle karte waqt.
+
+
+Example of json data -
+---------------------
+
+{
+  "name": "John",
+  "age": 30,
+  "city": "New York"
+}
+
+
+
+
+
+Pandas Mein JSON File Read Karna
+-----------------------------------
+
+Agar JSON data tabular format mein hai (jaise list of dictionaries), to aap Pandas ka read_json() function use kar sakte ho taaki data ko DataFrame ke form mein load kiya ja sake.
+
+Example --
+--------
+import pandas as pd
+df = pd.read_json('data.json')
+print(df.to_string()) 
+
+----------------------------------------------------
+Tip: use to_string() to print the entire DataFrame.
+----------------------------------------------------
+
+
+
+
+
+
+Dictionary as JSON
+-------------------
+JSON = Python Dictionary
+JSON objects have the same format as Python dictionaries.
+If your JSON code is not in a file, but in a Python Dictionary, you can load it into a DataFrame directly:
+
+
+Example --
+--------
+Load a Python Dictionary into a DataFrame:
+
+import pandas as pd
+
+data = {
+  "Duration":{"0":60,"1":60,"2":60,"3":45,"4":45,"5":60},
+  "Pulse":{"0":110,"1":117,"2":103,"3":109,"4":117,"5":102},
+  "Maxpulse":{"0":130,"1":145,"2":135,"3":175,"4":148,"5":127},
+  "Calories":{"0":409,"1":479,"2":340,"3":282,"4":406,"5":300}
+}
+
+df = pd.DataFrame(data)
+print(df) 
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+                                        Pandas - Analyzing DataFrames
+                                        -----------------------------
+
+
+Viewing the Data
+------------------
+One of the most used method for getting a quick overview of the DataFrame, is the head() method.
+The head() method returns the headers and a specified number of rows, starting from the top.
+
+Note: if the number of rows is not specified, the head() method will return the top 5 rows.
+ 
+
+                                head() method -
+                                ---------------
+
+Example (1)--
+----------
+Print the first 5 rows of the DataFrame:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+print(df.head())
+
+
+
+Example (2) --
+-----------
+Get a quick overview by printing the first 10 rows of the DataFrame:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+print(df.head(10))
+
+
+
+
+                                        tail() method -
+                                        ---------------
+There is also a tail() method for viewing the last rows of the DataFrame.
+The tail() method returns the headers and a specified number of rows, starting from the bottom.
+
+Example --
+---------
+Print the last 5 rows of the DataFrame:
+
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+print(df.tail())
+
+
+
+                                        Info About the Data
+                                        ---------------------
+
+The DataFrames object has a method called info(), that gives you more information about the data set
+
+Example -
+---------
+Print information about the data:
+
+
+import pandas as pd
+df = pd.read_csv('data.csv')    
+print(df.info())
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Pandas - Cleaning Data
+--------------------------
+
+
+                Data Cleaning
+                ---------------
+
+Data cleaning means fixing bad data in your data set.
+
+Bad data could be:
+
+Empty cells
+Data in wrong format
+Wrong data
+Duplicates
+
+
+
+
+
+                Empty Cells
+               -------------
+
+Empty cells can potentially give you a wrong result when you analyze data.
+We have 2 option in this stage
+(1) Delete Rows or remove row 
+(2) fill empty values
+
+
+(1) Remove Rows
+------------------
+One way to deal with empty cells is to remove rows that contain empty cells.
+This is usually OK, since data sets can be very big, and removing a few rows will not have a big impact on the result.
+
+
+Example -
+--------
+Return a new Data Frame with no empty cells:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+new_df = df.dropna()
+print(new_df.to_string())
+
+
+Note: By default, the dropna() method returns a new DataFrame, and will not change the original.
+----
+
+If you want to change the original DataFrame, use the inplace = True argument:
+
+
+Example -
+-------
+import pandas as pd
+df = pd.read_csv('data.csv')
+df.dropna(inplace = True)
+print(df.to_string())
+
+Note: Now, the dropna(inplace = True) will NOT return a new DataFrame, but it will remove all rows containing NULL values -----      from the original DataFrame.
+
+
+
+
+
+
+(2) Replace Empty Values
+---------------------------
+Another way of dealing with empty cells is to insert a new value instead.
+This way you do not have to delete entire rows just because of some empty cells.
+The fillna() method allows us to replace empty cells with a value:
+
+
+Example -
+-------
+Replace NULL values with the number 130:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+df.fillna(130, inplace = True)
+
+
+
+                Replace Only For Specified Columns
+                -----------------------------------
+The example above replaces all empty cells in the whole Data Frame.
+To only replace empty values for one column, specify the column name for the DataFrame:
+
+
+Example -
+---------
+Replace NULL values in the "Calories" columns with the number 130:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+df["Calories"].fillna(130, inplace = True)
+
+
+
+
+Replace Using Mean, Median, or Mode
+-------------------------------------
+A common way to replace empty cells, is to calculate the mean, median or mode value of the column.
+Pandas uses the mean() median() and mode() methods to calculate the respective values for a specified column:
+
+Example -
+-----------
+Calculate the MEAN, and replace any empty values with it:
+
+Mean = the average value (the sum of all values divided by number of values).
+-----
+import pandas as pd
+df = pd.read_csv('data.csv')
+x = df["Calories"].mean()
+df["Calories"].fillna(x, inplace = True)
+
+
+
+Example -
+---------
+Calculate the MEDIAN, and replace any empty values with it:
+
+Median = the value in the middle, after you have sorted all values ascending.
+------
+import pandas as pd
+df = pd.read_csv('data.csv')
+x = df["Calories"].median()
+df["Calories"].fillna(x, inplace = True)
+
+
+Example -
+--------
+Calculate the MODE, and replace any empty values with it:
+
+Mode = the value that appears most frequently.
+-----
+import pandas as pd
+df = pd.read_csv('data.csv')
+x = df["Calories"].mode()[0]
+df["Calories"].fillna(x, inplace = True)
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+                        Pandas - Cleaning Data of Wrong Format
+                        --------------------------------------
+
+Data of Wrong Format
+--------------------
+Cells with data of wrong format can make it difficult, or even impossible, to analyze data.
+To fix it, you have two options: remove the rows, or convert all cells in the columns into the same format.
+
+
+
+Convert Into a Correct Format
+-----------------------------
+In our Data Frame, we have two cells with the wrong format. Check out row 22 and 26, the 'Date' column should be a string that represents a date:
+
+
+        Duration    Date       Pulse  Maxpulse  Calories
+  0         60  '2020/12/01'    110       130     409.1
+  1         60  '2020/12/02'    117       145     479.0
+  2         60  '2020/12/03'    103       135     340.0
+  3         45  '2020/12/04'    109       175     282.4
+  4         45  '2020/12/05'    117       148     406.0
+  5         60  '2020/12/06'    102       127     300.0
+  6         60  '2020/12/07'    110       136     374.0
+  7        450  '2020/12/08'    104       134     253.3
+  8         30  '2020/12/09'    109       133     195.1
+  9         60  '2020/12/10'     98       124     269.0
+  10        60  '2020/12/11'    103       147     329.3
+  11        60  '2020/12/12'    100       120     250.7
+  12        60  '2020/12/12'    100       120     250.7
+  13        60  '2020/12/13'    106       128     345.3
+  14        60  '2020/12/14'    104       132     379.3
+  15        60  '2020/12/15'     98       123     275.0
+  16        60  '2020/12/16'     98       120     215.2
+  17        60  '2020/12/17'    100       120     300.0
+  18        45  '2020/12/18'     90       112       NaN
+  19        60  '2020/12/19'    103       123     323.0
+  20        45  '2020/12/20'     97       125     243.0
+  21        60  '2020/12/21'    108       131     364.2
+  22        45           NaN    100       119     282.0
+  23        60  '2020/12/23'    130       101     300.0
+  24        45  '2020/12/24'    105       132     246.0
+  25        60  '2020/12/25'    102       126     334.5
+  26        60      20201226    100       120     250.0
+  27        60  '2020/12/27'     92       118     241.0
+  28        60  '2020/12/28'    103       132       NaN
+  29        60  '2020/12/29'    100       132     280.0
+  30        60  '2020/12/30'    102       129     380.3
+  31        60  '2020/12/31'     92       115     243.0
+
+Let's try to convert all cells in the 'Date' column into dates.
+
+Pandas has a to_datetime() method for this:
+
+
+
+Example -
+--------
+Convert to date:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+df['Date'] = pd.to_datetime(df['Date'])
+print(df.to_string())
+
+
+
+
+
+
+Result:
+
+
+      Duration          Date  Pulse  Maxpulse  Calories
+  0         60  '2020/12/01'    110       130     409.1
+  1         60  '2020/12/02'    117       145     479.0
+  2         60  '2020/12/03'    103       135     340.0
+  3         45  '2020/12/04'    109       175     282.4
+  4         45  '2020/12/05'    117       148     406.0
+  5         60  '2020/12/06'    102       127     300.0
+  6         60  '2020/12/07'    110       136     374.0
+  7        450  '2020/12/08'    104       134     253.3
+  8         30  '2020/12/09'    109       133     195.1
+  9         60  '2020/12/10'     98       124     269.0
+  10        60  '2020/12/11'    103       147     329.3
+  11        60  '2020/12/12'    100       120     250.7
+  12        60  '2020/12/12'    100       120     250.7
+  13        60  '2020/12/13'    106       128     345.3
+  14        60  '2020/12/14'    104       132     379.3
+  15        60  '2020/12/15'     98       123     275.0
+  16        60  '2020/12/16'     98       120     215.2
+  17        60  '2020/12/17'    100       120     300.0
+  18        45  '2020/12/18'     90       112       NaN
+  19        60  '2020/12/19'    103       123     323.0
+  20        45  '2020/12/20'     97       125     243.0
+  21        60  '2020/12/21'    108       131     364.2
+  22        45           NaT    100       119     282.0
+  23        60  '2020/12/23'    130       101     300.0
+  24        45  '2020/12/24'    105       132     246.0
+  25        60  '2020/12/25'    102       126     334.5
+  26        60  '2020/12/26'    100       120     250.0
+  27        60  '2020/12/27'     92       118     241.0
+  28        60  '2020/12/28'    103       132       NaN
+  29        60  '2020/12/29'    100       132     280.0
+  30        60  '2020/12/30'    102       129     380.3
+  31        60  '2020/12/31'     92       115     243.0
+
+
+As you can see from the result, the date in row 26 was fixed, but the empty date in row 22 got a NaT (Not a Time) value, in other words an empty value. One way to deal with empty values is simply removing the entire row.
+
+
+
+Removing Rows
+---------------
+
+The result from the converting in the example above gave us a NaT value, which can be handled as a NULL value, and we can remove the row by using the dropna() method.
+
+Example -
+--------
+Remove rows with a NULL value in the "Date" column:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+df['Date'] = pd.to_datetime(df['Date'])
+df.dropna(subset=['Date'], inplace = True)
+print(df.to_string())
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+                                Pandas - Fixing Wrong Data
+                                ----------------------------
+
+Wrong Data
+------------
+
+"Wrong data" does not have to be "empty cells" or "wrong format", it can just be wrong, like if someone registered "199" instead of "1.99".
+
+Sometimes you can spot wrong data by looking at the data set, because you have an expectation of what it should be.
+
+If you take a look at our data set, you can see that in row 7, the duration is 450, but for all the other rows the duration is between 30 and 60.
+
+It doesn't have to be wrong, but taking in consideration that this is the data set of someone's workout sessions, we conclude with the fact that this person did not work out in 450 minutes.
+
+
+
+
+
+   Duration          Date  Pulse  Maxpulse  Calories
+  0         60  '2020/12/01'    110       130     409.1
+  1         60  '2020/12/02'    117       145     479.0
+  2         60  '2020/12/03'    103       135     340.0
+  3         45  '2020/12/04'    109       175     282.4
+  4         45  '2020/12/05'    117       148     406.0
+  5         60  '2020/12/06'    102       127     300.0
+  6         60  '2020/12/07'    110       136     374.0
+  7        450  '2020/12/08'    104       134     253.3
+  8         30  '2020/12/09'    109       133     195.1
+  9         60  '2020/12/10'     98       124     269.0
+  10        60  '2020/12/11'    103       147     329.3
+  11        60  '2020/12/12'    100       120     250.7
+  12        60  '2020/12/12'    100       120     250.7
+  13        60  '2020/12/13'    106       128     345.3
+  14        60  '2020/12/14'    104       132     379.3
+  15        60  '2020/12/15'     98       123     275.0
+  16        60  '2020/12/16'     98       120     215.2
+  17        60  '2020/12/17'    100       120     300.0
+  18        45  '2020/12/18'     90       112       NaN
+  19        60  '2020/12/19'    103       123     323.0
+  20        45  '2020/12/20'     97       125     243.0
+  21        60  '2020/12/21'    108       131     364.2
+  22        45           NaN    100       119     282.0
+  23        60  '2020/12/23'    130       101     300.0
+  24        45  '2020/12/24'    105       132     246.0
+  25        60  '2020/12/25'    102       126     334.5
+  26        60      20201226    100       120     250.0
+  27        60  '2020/12/27'     92       118     241.0
+  28        60  '2020/12/28'    103       132       NaN
+  29        60  '2020/12/29'    100       132     280.0
+  30        60  '2020/12/30'    102       129     380.3
+  31        60  '2020/12/31'     92       115     243.0
+
+How can we fix wrong values, like the one for "Duration" in row 7?
+
+
+
+
+
+
+Replacing Values
+-----------------
+One way to fix wrong values is to replace them with something else.
+In our example, it is most likely a typo, and the value should be "45" instead of "450", and we could just insert "45" in row 7:
+
+
+Example -
+--------
+Set "Duration" = 45 in row 7:
+
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+df.loc[7,'Duration'] = 45
+print(df.to_string())   
+
+
+
+For small data sets you might be able to replace the wrong data one by one, but not for big data sets.
+To replace wrong data for larger data sets you can create some rules, e.g. set some boundaries for legal values, and replace any values that are outside of the boundaries.
+
+
+Example -
+----------
+Loop through all values in the "Duration" column.
+If the value is higher than 120, set it to 120:
+
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+for x in df.index:
+  if df.loc[x, "Duration"] > 120:
+    df.loc[x, "Duration"] = 120
+print(df.to_string())
+
+
+
+
+Removing Rows
+--------------
+
+Another way of handling wrong data is to remove the rows that contains wrong data.
+This way you do not have to find out what to replace them with, and there is a good chance you do not need them to do your analyses.
+
+Example -
+-------
+Delete rows where "Duration" is higher than 120:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+for x in df.index:
+  if df.loc[x, "Duration"] > 120:
+    df.drop(x, inplace = True)
+
+#remember to include the 'inplace = True' argument to make the changes in the original DataFrame object instead of returning a copy
+print(df.to_string())
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+                        Discovering Duplicates
+                        -----------------------
+
+Duplicate rows are rows that have been registered more than one time.
+
+
+
+    Duration          Date  Pulse  Maxpulse  Calories
+  0         60  '2020/12/01'    110       130     409.1
+  1         60  '2020/12/02'    117       145     479.0
+  2         60  '2020/12/03'    103       135     340.0
+  3         45  '2020/12/04'    109       175     282.4
+  4         45  '2020/12/05'    117       148     406.0
+  5         60  '2020/12/06'    102       127     300.0
+  6         60  '2020/12/07'    110       136     374.0
+  7        450  '2020/12/08'    104       134     253.3
+  8         30  '2020/12/09'    109       133     195.1
+  9         60  '2020/12/10'     98       124     269.0
+  10        60  '2020/12/11'    103       147     329.3
+  11        60  '2020/12/12'    100       120     250.7
+  12        60  '2020/12/12'    100       120     250.7
+  13        60  '2020/12/13'    106       128     345.3
+  14        60  '2020/12/14'    104       132     379.3
+  15        60  '2020/12/15'     98       123     275.0
+  16        60  '2020/12/16'     98       120     215.2
+  17        60  '2020/12/17'    100       120     300.0
+  18        45  '2020/12/18'     90       112       NaN
+  19        60  '2020/12/19'    103       123     323.0
+  20        45  '2020/12/20'     97       125     243.0
+  21        60  '2020/12/21'    108       131     364.2
+  22        45           NaN    100       119     282.0
+  23        60  '2020/12/23'    130       101     300.0
+  24        45  '2020/12/24'    105       132     246.0
+  25        60  '2020/12/25'    102       126     334.5
+  26        60      20201226    100       120     250.0
+  27        60  '2020/12/27'     92       118     241.0
+  28        60  '2020/12/28'    103       132       NaN
+  29        60  '2020/12/29'    100       132     280.0
+  30        60  '2020/12/30'    102       129     380.3
+  31        60  '2020/12/31'     92       115     243.0
+
+By taking a look at our test data set, we can assume that row 11 and 12 are duplicates.
+To discover duplicates, we can use the duplicated() method.
+The duplicated() method returns a Boolean values for each row:
+
+
+Example -
+--------
+Returns True for every row that is a duplicate, otherwise False
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+print(df.duplicated())
+
+
+
+
+                Removing Duplicates
+                --------------------
+To remove duplicates, use the drop_duplicates() method.
+
+Example
+Remove all duplicates:
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+df.drop_duplicates(inplace = True)
+print(df.to_string())
+
+#Notice that row 12 has been removed from the result
+
+
+
+result -
+-------
+
+  Duration          Date  Pulse  Maxpulse  Calories
+0         60  '2020/12/01'    110       130     409.1
+1         60  '2020/12/02'    117       145     479.0
+2         60  '2020/12/03'    103       135     340.0
+3         45  '2020/12/04'    109       175     282.4
+4         45  '2020/12/05'    117       148     406.0
+5         60  '2020/12/06'    102       127     300.0
+6         60  '2020/12/07'    110       136     374.0
+7        450  '2020/12/08'    104       134     253.3
+8         30  '2020/12/09'    109       133     195.1
+9         60  '2020/12/10'     98       124     269.0
+10        60  '2020/12/11'    103       147     329.3
+11        60  '2020/12/12'    100       120     250.7
+13        60  '2020/12/13'    106       128     345.3
+14        60  '2020/12/14'    104       132     379.3
+15        60  '2020/12/15'     98       123     275.0
+16        60  '2020/12/16'     98       120     215.2
+17        60  '2020/12/17'    100       120     300.0
+18        45  '2020/12/18'     90       112       NaN
+19        60  '2020/12/19'    103       123     323.0
+20        45  '2020/12/20'     97       125     243.0
+21        60  '2020/12/21'    108       131     364.2
+22        45           NaN    100       119     282.0
+23        60  '2020/12/23'    130       101     300.0
+24        45  '2020/12/24'    105       132     246.0
+25        60  '2020/12/25'    102       126     334.5
+26        60      20201226    100       120     250.0
+27        60  '2020/12/27'     92       118     241.0
+28        60  '2020/12/28'    103       132       NaN
+29        60  '2020/12/29'    100       132     280.0
+30        60  '2020/12/30'    102       129     380.3
+31        60  '2020/12/31'     92       115     243.0
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+                                        Pandas - Data Correlations
+                                        ---------------------------
+
+Pandas - Data Correlations
+
+Pandas mein data correlation ka use karke hum do ya zyada variables ke beech relationship ko measure karte hain. Correlation humein batata hai ki ek variable ka change dusre variable par kya asar dalta hai. Iski value -1 se 1 ke beech hoti hai:
+
+ 1 :- Perfect positive correlation (jab ek variable badhta hai, to doosra bhi badhta hai).
+----
+ -1 :- Perfect negative correlation (jab ek variable badhta hai, to doosra ghatta hai).
+----
+ 0 :- No correlation (koi linear relationship nahi hai).
+----
+Types of Correlation:-
+---------------------
+
+Positive Correlation :- Dono variables ek dusre ke saath badhte ya ghatte hain.
+--------------------
+Negative Correlation :- Jab ek variable badhta hai, doosra ghatta hai.
+--------------------
+No Correlation :- Variables ke beech koi clear relationship nahi hai.
+---------------
+
+Pandas mein Correlation Calculate Karna
+-----------------------------------------
+Pandas mein corr() function ka use karke DataFrame ke columns ke beech correlation calculate kiya ja sakta hai. Ye mainly Pearson correlation ko use karta hai, jo linear relationships ko measure karta hai.\
+
+
+
+Example -
+---------
+
+import pandas as pd
+# Example data
+data = {
+    'Temperature': [20, 21, 22, 23, 24, 25],
+    'Ice_Cream_Sales': [100, 150, 200, 250, 300, 350],
+    'Rainfall': [30, 28, 25, 20, 15, 10]
+}
+
+df = pd.DataFrame(data)
+
+# Correlation matrix
+corr_matrix = df.corr()
+
+print(corr_matrix)
+
+
+
+
+output -
+-------
+
+                 Temperature  Ice_Cream_Sales  Rainfall
+Temperature         1.000000         1.000000 -0.997054
+Ice_Cream_Sales     1.000000         1.000000 -0.997054
+Rainfall           -0.997054        -0.997054  1.000000
+
+
+Explanation:-
+------------
+
+Temperature aur Ice_Cream_Sales ke beech perfect positive correlation hai (1.0).
+Temperature aur Rainfall ke beech strong negative correlation hai (-0.997), iska matlab jaise-jaise temperature badhta hai, rainfall ghatta hai.
